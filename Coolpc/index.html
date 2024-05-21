@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>原價屋鏡像站</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .floating-cart {
+            position: fixed;
+            right: 20px;
+            top: 20px;
+            width: 300px;
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .floating-close-btn {
+            position: fixed;
+            top: 50cap;
+            right: 20rcap;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>原價屋鏡像站</h1>
+
+    <!-- Search bar -->
+    <div class="input-group mb-3">
+        <input type="text" id="search-bar" class="form-control" placeholder="Search for items...">
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" onclick="searchItems()">Search</button>
+        </div>
+    </div>
+
+    <!-- Categories dropdown -->
+    <div class="accordion" id="categoriesAccordion">
+        {{range $index, $category := .}}
+        <div class="card">
+            <div class="card-header" id="heading{{$index}}">
+                <h2 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse{{$index}}" aria-expanded="true" aria-controls="collapse{{$index}}">
+                        {{$category.Name}}
+                    </button>
+                </h2>
+            </div>
+
+            <div id="collapse{{$index}}" class="collapse" aria-labelledby="heading{{$index}}" data-parent="#categoriesAccordion">
+                <div class="card-body">
+                    {{range $subcategory := $category.SubCategories}}
+                    <h3>{{$subcategory.Name}}</h3>
+                    <ul>
+                        {{range $item := $subcategory.Items}}
+                        <li onmouseenter=productFocused(this) onmouseleave=productUnFocused(this)>
+                            <div>
+                                <span onclick="addToCart('{{$item.Name}}', {{$item.Price}})">{{$item.Name}}</span>, 價格: {{$item.Price}}
+<!--                                <button class="btn btn-sm btn-primary" onclick="addToCart('{{$item.Name}}', {{$item.Price}})">加入購物車</button>-->
+                            </div>
+                        </li>
+                        {{end}}
+                    </ul>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+        {{end}}
+    </div>
+</div>
+
+<button class="floating-close-btn" onclick="toggleDropdowns()">Close</button>
+
+<!-- Floating cart -->
+<div class="floating-cart" id="cart">
+    <h4>購物車</h4>
+    <ul id="cart-items">
+        <!-- Cart items will be appended here -->
+    </ul>
+    <p>總金額: $<span id="total-price">0</span>元</p>
+    <button class="btn btn-danger" onclick="clearCart()">清空購物車</button>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<script>
+    let cart = [];
+
+    function addToCart(name, price) {
+        cart.push({name, price});
+        updateCart();
+    }
+
+    function updateCart() {
+        const cartItems = $('#cart-items');
+        cartItems.empty();
+        cart.forEach((item, index) => {
+            cartItems.append(`<li>${item.name} - $${item.price} <button class="btn btn-sm btn-danger" onclick="removeFromCart(${index})">移除</button></li>`);
+        });
+        updateTotalPrice();
+    }
+
+    function updateTotalPrice() {
+        let totalPrice = 0;
+        cart.forEach(item => {
+            totalPrice += item.price;
+        });
+        document.getElementById('total-price').innerText = totalPrice.toFixed(0);
+    }
+
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        updateCart();
+    }
+
+    function clearCart() {
+        cart = [];
+        updateCart();
+    }
+
+    function searchItems() {
+        const query = $('#search-bar').val().toLowerCase();
+        $('.card-body ul li').each(function() {
+            const itemName = $(this).text().toLowerCase();
+            $(this).toggle(itemName.includes(query));
+        });
+    }
+    function productFocused(element) {
+        element.style.color = 'blue'; // Change to whatever effect you prefer
+    }
+    function productUnFocused(element) {
+        element.style.color = 'black'; // Change to whatever effect you prefer
+    }
+</script>
+
+<script>
+    // Your existing JavaScript code
+
+    function toggleDropdowns() {
+        let dropdownContents = document.querySelectorAll('.collapse');
+        dropdownContents.forEach(content => {
+            if (content.classList.contains('show')) {
+                content.classList.remove('show');
+            }
+        });
+    }
+</script>
+
+
+</body>
+</html>

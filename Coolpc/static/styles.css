@@ -1,0 +1,56 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+h1, h2 {
+    color: #333;
+}
+
+.category, .subcategory {
+    margin-bottom: 20px;
+}
+
+.dropdown-btn {
+    background-color: #f1f1f1;
+    color: #333;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+}
+
+.dropdown-content {
+    display: none;
+    background-color: #f9f9f9;
+    padding: 0 10px;
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+}
+
+#cart {
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+}
+
+.cart-item button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.float-right {
+    float: right;
+}
